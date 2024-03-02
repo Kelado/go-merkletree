@@ -27,6 +27,8 @@ package merkletree
 
 import (
 	"bytes"
+	"encoding/hex"
+	"fmt"
 	"math/bits"
 	"runtime"
 	"sync"
@@ -240,4 +242,19 @@ func concatSortHash(b1, b2 []byte) []byte {
 	}
 
 	return concatHash(b2, b1)
+}
+
+func (m *MerkleTree) String() {
+	fmt.Println(m.nodes)
+	fmt.Println(m.Depth)
+	// var hexMr string
+	var str string
+	for d := 0; d < m.Depth; d++ {
+		fmt.Println("Size of s: ", len(m.nodes[d]))
+		for s := 0; s < len(m.nodes[d]); s++ {
+			str = hex.EncodeToString(m.nodes[d][s])
+			fmt.Printf("%s ", str)
+		}
+		fmt.Printf("\n\t")
+	}
 }

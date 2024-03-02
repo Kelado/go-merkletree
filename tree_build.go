@@ -28,6 +28,8 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
+var FLAG bool
+
 // treeBuild builds the Merkle Tree and stores all the nodes.
 func (m *MerkleTree) treeBuild() (err error) {
 	finishMap := make(chan struct{})
@@ -37,9 +39,18 @@ func (m *MerkleTree) treeBuild() (err error) {
 	for i := 0; i < m.Depth-1; i++ {
 		m.nodes[i] = appendNodeIfOdd(m.nodes[i])
 		numNodes := len(m.nodes[i])
-		m.nodes[i+1] = make([][]byte, numNodes>>1)
+
+		if FLAG {
+			m.nodes[i+1] = make([][]byte, (numNodes>>1)+1)
+		} else {
+			m.nodes[i+1] = make([][]byte, (numNodes >> 1))
+		}
 
 		for j := 0; j < numNodes; j += 2 {
+			if j >= numNodes-2 && FLAG {
+				m.nodes[i+1][j>>1] = m.concatHashFunc(m.nodes[i][j], []byte{})
+				break
+			}
 			if m.nodes[i+1][j>>1], err = m.HashFunc(
 				m.concatHashFunc(m.nodes[i][j], m.nodes[i][j+1]),
 			); err != nil {
@@ -125,12 +136,14 @@ func (m *MerkleTree) initNodes() {
 
 func appendNodeIfOdd(buffer [][]byte) [][]byte {
 	if len(buffer)&1 == 0 {
+		FLAG = false
 		return buffer
 	}
 
-	appendNode := buffer[len(buffer)-1]
+	FLAG = true
+	// appendNode := buffer[len(buffer)-1]
 
-	buffer = append(buffer, appendNode)
+	// buffer = append(buffer, appendNode)
 
 	return buffer
 }

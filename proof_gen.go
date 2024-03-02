@@ -34,7 +34,7 @@ import (
 func (m *MerkleTree) proofGen() (err error) {
 	m.initProofs()
 	buffer, bufferSize := initBuffer(m.Leaves)
-
+	fmt.Println(buffer)
 	for step := 0; step < m.Depth; step++ {
 		bufferSize = fixOddNumOfNodes(buffer, bufferSize, step)
 		m.updateProofs(buffer, bufferSize, step)

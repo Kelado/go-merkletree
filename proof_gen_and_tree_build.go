@@ -91,7 +91,7 @@ func updateProofInTwoBatchesFromTree(proofs []*Proof, buffer [][]byte, idx, batc
 
 	for i := start; i < end; i++ {
 		proofs[i].Path += 1 << step
-		proofs[i].Siblings = append(proofs[i].Siblings, buffer[idx+1])
+		proofs[i].Siblings = append(proofs[i].Siblings, buffer[idx])
 	}
 
 	start += batch
