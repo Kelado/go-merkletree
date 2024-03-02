@@ -1,4 +1,4 @@
-module github.com/txaty/go-merkletree
+module github.com/Kelado/go-merkletree
 
 go 1.21
 
